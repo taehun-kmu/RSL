@@ -1,8 +1,9 @@
 cmake_minimum_required(VERSION 3.22)
-project(rsl VERSION 1.1.0 LANGUAGES CXX DESCRIPTION "ROS Support Library")
+project(rsl VERSION 1.2.0 LANGUAGES CXX DESCRIPTION "ROS Support Library")
 
 set(CMAKE_CXX_EXTENSIONS OFF)
 
+find_package(ament_cmake REQUIRED)
 find_package(Eigen3 REQUIRED CONFIG)
 find_package(fmt REQUIRED)
 find_package(rclcpp REQUIRED)
@@ -40,11 +41,9 @@ generate_export_header(rsl EXPORT_FILE_NAME include/rsl/export.hpp)
 add_subdirectory(docs)
 
 option(RSL_BUILD_TESTING "Build tests" OFF)
-if(RSL_BUILD_TESTING)
+if(RSL_BUILD_TESTING OR BUILD_TESTING)
     add_subdirectory(tests)
 endif()
-
-include(CMakePackageConfigHelpers)
 
 install(
     DIRECTORY include/ ${PROJECT_BINARY_DIR}/include/
@@ -62,10 +61,10 @@ install(
     NAMESPACE rsl::
     DESTINATION share/rsl/cmake
 )
-write_basic_package_version_file(rsl-config-version.cmake COMPATIBILITY SameMajorVersion)
-install(
-    FILES cmake/rsl-config.cmake ${PROJECT_BINARY_DIR}/rsl-config-version.cmake
-    DESTINATION share/rsl/cmake
-)
+
+# Export to ament
+ament_export_targets(rsl-targets HAS_LIBRARY_TARGET)
+ament_export_dependencies(Eigen3 fmt rclcpp tcb_span tl_expected)
+ament_package(CONFIG_EXTRAS "cmake/rsl-extras.cmake")
 
 add_custom_target(tidy COMMAND run-clang-tidy -p ${CMAKE_BINARY_DIR})

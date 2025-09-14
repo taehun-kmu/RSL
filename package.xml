@@ -10,6 +10,7 @@
   <maintainer email="chrisjthrasher@gmail.com">Chris Thrasher</maintainer>
   <license>BSD-3-Clause</license>
 
+  <buildtool_depend>ament_cmake</buildtool_depend>
   <buildtool_depend>doxygen</buildtool_depend>
 
   <depend>eigen</depend>
@@ -22,4 +23,8 @@
   <test_depend>clang-tidy</test_depend>
   <test_depend>git</test_depend>
   <test_depend>range-v3</test_depend>
+
+  <export>
+    <build_type>ament_cmake</build_type>
+  </export>
 </package>
